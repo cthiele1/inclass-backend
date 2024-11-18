@@ -91,7 +91,6 @@ const house_plans = [
     goals: ["Help Others"],
   },
 ];
-
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
@@ -111,7 +110,6 @@ app.post("/api/house_plans", upload.single("img"), (req, res) => {
     return;
   }
 
-  // Creating the new house object inside the POST handler
   const house = {
     _id: house_plans.length + 1,
     name: req.body.name,
@@ -124,7 +122,7 @@ app.post("/api/house_plans", upload.single("img"), (req, res) => {
     house.main_image = req.file.filename;
   }
 
-  house_plans.push(house); // Pushing the new house object to the house_plans array
+  house_plans.push(house);
 
   console.log(house);
   res.status(200).send(house);
