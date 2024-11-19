@@ -119,7 +119,7 @@ app.post("/api/house_plans", upload.single("img"), (req, res) => {
   };
 
   if (req.file) {
-    house.main_image = req.file.filename;
+    house.img_name = req.file.filename;
   }
 
   house_plans.push(house);
