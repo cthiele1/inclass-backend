@@ -102,15 +102,15 @@ app.get("/api/house_plans", (req, res) => {
 app.post("/api/house_plans", upload.single("img"), (req, res) => {
   console.log("In a post request");
 
-  const result = validateHouse(req.body);
+  const result = validateCook(req.body);
 
   if (result.error) {
     res.status(400).send(result.error.details[0].message);
-    console.log("I have an error");
+    console.log("Error");
     return;
   }
 
-  const house = {
+  const cook = {
     _id: house_plans.length + 1,
     name: req.body.name,
     hometown: req.body.hometown,
@@ -119,16 +119,16 @@ app.post("/api/house_plans", upload.single("img"), (req, res) => {
   };
 
   if (req.file) {
-    house.img_name = req.file.filename;
+    cook.img_name = req.file.filename;
   }
 
-  house_plans.push(house);
+  house_plans.push(cook);
 
-  console.log(house);
-  res.status(200).send(house);
+  console.log(cook);
+  res.status(200).send(cook);
 });
 
-const validateHouse = (house) => {
+const validateCook = (cook) => {
   const schema = Joi.object({
     name: Joi.string().min(3).required(),
     hometown: Joi.string().required(),
@@ -136,7 +136,7 @@ const validateHouse = (house) => {
     rating: Joi.number().required(),
   });
 
-  return schema.validate(house);
+  return schema.validate(cook);
 };
 
 app.listen(3001, () => {
