@@ -20,7 +20,7 @@ const upload = multer({ storage: storage });
 const house_plans = [
   {
     _id: 1,
-    img_name: "images/cook1.jpg",
+    img_name: "cook1.jpg",
     name: "Ray Young",
     hometown: "Atlanta, GA",
     favorite_recipe: "Biscuits",
@@ -29,7 +29,7 @@ const house_plans = [
   },
   {
     _id: 2,
-    img_name: "images/cook2.jpg",
+    img_name: "cook2.jpg",
     name: "Earl Rayberry",
     hometown: "Charleston, SC",
     favorite_recipe: "Greenbeans",
@@ -38,7 +38,7 @@ const house_plans = [
   },
   {
     _id: 3,
-    img_name: "images/cook3.jpg",
+    img_name: "cook3.jpg",
     name: "Mark Bulhberg",
     hometown: "Oxford, MS",
     favorite_recipe: "Pulled Pork",
@@ -47,7 +47,7 @@ const house_plans = [
   },
   {
     _id: 4,
-    img_name: "images/cook4.jpg",
+    img_name: "cook4.jpg",
     name: "Jermey Goldstein",
     hometown: "Baton Rouge, LA",
     favorite_recipe: "Crawfish",
@@ -56,7 +56,7 @@ const house_plans = [
   },
   {
     _id: 5,
-    img_name: "images/cook5.jpg",
+    img_name: "cook5.jpg",
     name: "Chris Brownberry",
     hometown: "Columbia, SC",
     favorite_recipe: "Mac & Cheese",
@@ -65,7 +65,7 @@ const house_plans = [
   },
   {
     _id: 6,
-    img_name: "images/cook6.jpg",
+    img_name: "cook6.jpg",
     name: "Amy Bornwell",
     hometown: "Greenville, SC",
     favorite_recipe: "Grits",
@@ -74,7 +74,7 @@ const house_plans = [
   },
   {
     _id: 7,
-    img_name: "images/cook7.jpg",
+    img_name: "cook7.jpg",
     name: "Jack Dawson",
     hometown: "Raleigh, NC",
     favorite_recipe: "Cornbread",
@@ -83,7 +83,7 @@ const house_plans = [
   },
   {
     _id: 8,
-    img_name: "images/cook8.jpg",
+    img_name: "cook8.jpg",
     name: "Josh Cornberry",
     hometown: "Auburn, AL",
     favorite_recipe: "Pimento Cheese",
