@@ -3,6 +3,8 @@ const cors = require("cors");
 const app = express();
 const Joi = require("joi");
 app.use(cors());
+app.use("/uploads", express.static("uploads"));
+app.use(express.json());
 app.use(express.static("public"));
 const multer = require("multer");
 
@@ -111,7 +113,7 @@ app.post("/api/house_plans", upload.single("img"), (req, res) => {
   }
 
   const cook = {
-    _id: house_plans.length + 1,
+    id: house_plans.length + 1,
     name: req.body.name,
     hometown: req.body.hometown,
     favorite_recipe: req.body.favorite_recipe,
@@ -128,8 +130,19 @@ app.post("/api/house_plans", upload.single("img"), (req, res) => {
   res.status(200).send(cook);
 });
 
+app.delete("/api/house_plans/:id", (req, res) => {
+  const cook = house_plans.find((h) => h._id === parseInt(req.params.id));
+  if (!cook) {
+    res.status(404).send("The cook given id was not found");
+  }
+  const index = house_plans.indexOf(cook);
+  house_plans.splice(index, 1);
+  res.send(cook);
+});
+
 const validateCook = (cook) => {
   const schema = Joi.object({
+    id: Joi.allow(""),
     name: Joi.string().min(3).required(),
     hometown: Joi.string().required(),
     favorite_recipe: Joi.string().required(),
