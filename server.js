@@ -126,18 +126,25 @@ app.post("/api/house_plans", upload.single("img"), (req, res) => {
 
   house_plans.push(cook);
 
-  console.log(cook);
   res.status(200).send(cook);
 });
 
 app.delete("/api/house_plans/:id", (req, res) => {
-  const cook = house_plans.find((h) => h._id === parseInt(req.params.id));
+  //const cook = house_plans.find((h) => h._id === parseInt(req.params.id));
+  const { id } = req.params;
+  let cook;
+  house_plans.forEach((h) => {
+    if (h._id === parseInt(id)) {
+      cook = h;
+      return;
+    }
+  });
   if (!cook) {
     res.status(404).send("The cook given id was not found");
   }
   const index = house_plans.indexOf(cook);
   house_plans.splice(index, 1);
-  res.send(cook);
+  res.status(200).send(cook);
 });
 
 const validateCook = (cook) => {
@@ -147,6 +154,7 @@ const validateCook = (cook) => {
     hometown: Joi.string().required(),
     favorite_recipe: Joi.string().required(),
     rating: Joi.number().required(),
+    goals: Joi.string().required(),
   });
 
   return schema.validate(cook);
