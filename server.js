@@ -93,7 +93,6 @@ const house_plans = [
     goals: ["Help Others"],
   },
 ];
-
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
@@ -130,39 +129,29 @@ app.post("/api/house_plans", upload.single("img"), (req, res) => {
   res.status(200).send(cook);
 });
 
-app.put("/api/house_plans/:id", upload.single("img"), (req, res) => {
+app.put("/api/house_plans/:id", (req, res) => {
   const { id } = req.params;
-
-  // Find the cook by ID
-  const cook = house_plans.find((h) => h._id === parseInt(id));
-
-  if (!cook) {
-    return res.status(404).send("The cook with the given id was not found");
-  }
-
-  // Validate the updated cook information
   const result = validateCook(req.body);
 
   if (result.error) {
     return res.status(400).send(result.error.details[0].message);
   }
 
-  // Update the cook's details
+  const cook = house_plans.find((h) => h._id === parseInt(id));
+  if (!cook) {
+    return res.status(404).send("The cook with the given ID was not found.");
+  }
   cook.name = req.body.name;
   cook.hometown = req.body.hometown;
   cook.favorite_recipe = req.body.favorite_recipe;
   cook.rating = req.body.rating;
+  cook.goals = req.body.goals;
 
-  // If a new image is uploaded, update the img_name
-  if (req.file) {
-    cook.img_name = req.file.filename; // Ensuring the consistency with the existing field name
-  }
-
-  // Return the updated cook object
-  res.send(cook);
+  res.status(200).send(cook);
 });
 
 app.delete("/api/house_plans/:id", (req, res) => {
+  //const cook = house_plans.find((h) => h._id === parseInt(req.params.id));
   const { id } = req.params;
   let cook;
   house_plans.forEach((h) => {
@@ -172,7 +161,7 @@ app.delete("/api/house_plans/:id", (req, res) => {
     }
   });
   if (!cook) {
-    res.status(404).send("The cook with the given id was not found");
+    res.status(404).send("The cook given id was not found");
   }
   const index = house_plans.indexOf(cook);
   house_plans.splice(index, 1);
@@ -186,6 +175,7 @@ const validateCook = (cook) => {
     hometown: Joi.string().required(),
     favorite_recipe: Joi.string().required(),
     rating: Joi.number().required(),
+    goals: Joi.array().items(Joi.string()).required(),
   });
 
   return schema.validate(cook);
