@@ -7,6 +7,7 @@ app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(express.static("public"));
 const multer = require("multer");
+const mongoose = require("mongoose");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -19,83 +20,41 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const house_plans = [
-  {
-    id: 1,
-    img_name: "cook1.jpg",
-    name: "Ray Young",
-    hometown: "Atlanta, GA",
-    favorite_recipe: "Biscuits",
-    rating: 4.7,
-  },
-  {
-    id: 2,
-    img_name: "cook2.jpg",
-    name: "Earl Rayberry",
-    hometown: "Charleston, SC",
-    favorite_recipe: "Greenbeans",
-    rating: 4.2,
-  },
-  {
-    id: 3,
-    img_name: "cook3.jpg",
-    name: "Mark Bulhberg",
-    hometown: "Oxford, MS",
-    favorite_recipe: "Pulled Pork",
-    rating: 4.1,
-  },
-  {
-    id: 4,
-    img_name: "cook4.jpg",
-    name: "Jermey Goldstein",
-    hometown: "Baton Rouge, LA",
-    favorite_recipe: "Crawfish",
-    rating: 4.7,
-  },
-  {
-    id: 5,
-    img_name: "cook5.jpg",
-    name: "Chris Brownberry",
-    hometown: "Columbia, SC",
-    favorite_recipe: "Mac & Cheese",
-    rating: 3.9,
-  },
-  {
-    id: 6,
-    img_name: "cook6.jpg",
-    name: "Amy Bornwell",
-    hometown: "Greenville, SC",
-    favorite_recipe: "Grits",
-    rating: 4.3,
-  },
-  {
-    id: 7,
-    img_name: "cook7.jpg",
-    name: "Jack Dawson",
-    hometown: "Raleigh, NC",
-    favorite_recipe: "Cornbread",
-    rating: 4.9,
-  },
-  {
-    id: 8,
-    img_name: "cook8.jpg",
-    name: "Josh Cornberry",
-    hometown: "Auburn, AL",
-    favorite_recipe: "Pimento Cheese",
-    rating: 5.0,
-  },
-];
+mongoose
+  .connect(
+    "mongodb+srv://thielec2004:VZ1IP2ozSYzk3p6b@cluster0.wzcia.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+  )
+  .then(() => {
+    console.log("connected to mongodb");
+  })
+  .catch((error) => {
+    console.log("couldn't connect to mongodb", error);
+  });
+
+const cookSchema = new mongoose.Schema({
+  name: String,
+  hometown: String,
+  favorite_recipe: String,
+  rating: String,
+  img_name: String,
+});
+
+const house_plans = mongoose.model("Cook", cookSchema);
+
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-app.get("/api/house_plans", (req, res) => {
-  res.json(house_plans);
+app.get("/api/house_plans", async (req, res) => {
+  const house_plans = await Cook.find();
+  res.send(house_plans);
+});
+app.get("/api/house_plans/:id", async (req, res) => {
+  const house_plans = await Cook.findOne({ _id: id });
+  res.send(house_plans);
 });
 
-app.post("/api/house_plans", upload.single("img"), (req, res) => {
-  console.log("In a post request");
-
+app.post("/api/house_plans", upload.single("img"), async (req, res) => {
   const result = validateCook(req.body);
 
   if (result.error) {
@@ -104,13 +63,12 @@ app.post("/api/house_plans", upload.single("img"), (req, res) => {
     return;
   }
 
-  const cook = {
-    id: house_plans.length + 1,
+  const cook = new cook ({
     name: req.body.name,
     hometown: req.body.hometown,
     favorite_recipe: req.body.favorite_recipe,
     rating: req.body.rating,
-  };
+  });
 
   if (req.file) {
     cook.img_name = req.file.filename;
@@ -118,10 +76,11 @@ app.post("/api/house_plans", upload.single("img"), (req, res) => {
 
   house_plans.push(cook);
 
-  res.status(200).send(cook);
+  const newCook = await cook.save();
+  res.send(newCook);
 });
 
-app.put("/api/house_plans/:id", (req, res) => {
+app.put("/api/house_plans/:id", async (req, res) => {
   const { id } = req.params;
   const result = validateCook(req.body);
 
@@ -141,22 +100,28 @@ app.put("/api/house_plans/:id", (req, res) => {
   res.status(200).send(cook);
 });
 
-app.delete("/api/house_plans/:id", (req, res) => {
-  //const cook = house_plans.find((h) => h.id === parseInt(req.params.id));
-  const { id } = req.params;
-  let cook;
-  house_plans.forEach((h) => {
-    if (h.id === parseInt(id)) {
-      cook = h;
-      return;
-    }
-  });
-  if (!cook) {
-    res.status(404).send("The cook given id was not found");
-  }
-  const index = house_plans.indexOf(cook);
-  house_plans.splice(index, 1);
-  res.status(200).send(cook);
+let fieldsToUpdate = {
+  name: req.body.name,
+  hometown: req.body.hometown,
+  favorite_recipe: req.body.favorite_recipe,
+  rating: req.body.rating,
+};
+
+if (req.file) {
+  fieldsToUpdate.img = "images/" + req.file.filename;
+}
+
+const wentThrough = await Cook.updateOne(
+  { id: req.params.id },
+  fieldsToUpdate
+);
+
+const updatedCook = await.Cook.findOne({id,req,params,id });
+res.send(updatedCook); 
+
+app.delete("/api/house_plans/:id", async (req, res) => {
+  const cook = await Cook.findByIdAndDelete(req.params.id);
+  res.send(cook);
 });
 
 const validateCook = (cook) => {
