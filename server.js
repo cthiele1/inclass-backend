@@ -27,7 +27,6 @@ const house_plans = [
     hometown: "Atlanta, GA",
     favorite_recipe: "Biscuits",
     rating: 4.7,
-    goals: ["Help Others"],
   },
   {
     _id: 2,
@@ -36,7 +35,6 @@ const house_plans = [
     hometown: "Charleston, SC",
     favorite_recipe: "Greenbeans",
     rating: 4.2,
-    goals: ["Help Others"],
   },
   {
     _id: 3,
@@ -45,7 +43,6 @@ const house_plans = [
     hometown: "Oxford, MS",
     favorite_recipe: "Pulled Pork",
     rating: 4.1,
-    goals: ["Help Others"],
   },
   {
     _id: 4,
@@ -54,7 +51,6 @@ const house_plans = [
     hometown: "Baton Rouge, LA",
     favorite_recipe: "Crawfish",
     rating: 4.7,
-    goals: ["Help Others"],
   },
   {
     _id: 5,
@@ -63,7 +59,6 @@ const house_plans = [
     hometown: "Columbia, SC",
     favorite_recipe: "Mac & Cheese",
     rating: 3.9,
-    goals: ["Help Others"],
   },
   {
     _id: 6,
@@ -72,7 +67,6 @@ const house_plans = [
     hometown: "Greenville, SC",
     favorite_recipe: "Grits",
     rating: 4.3,
-    goals: ["Help Others"],
   },
   {
     _id: 7,
@@ -81,7 +75,6 @@ const house_plans = [
     hometown: "Raleigh, NC",
     favorite_recipe: "Cornbread",
     rating: 4.9,
-    goals: ["Help Others"],
   },
   {
     _id: 8,
@@ -90,7 +83,6 @@ const house_plans = [
     hometown: "Auburn, AL",
     favorite_recipe: "Pimento Cheese",
     rating: 5.0,
-    goals: ["Help Others"],
   },
 ];
 app.get("/", (req, res) => {
@@ -145,7 +137,6 @@ app.put("/api/house_plans/:id", (req, res) => {
   cook.hometown = req.body.hometown;
   cook.favorite_recipe = req.body.favorite_recipe;
   cook.rating = req.body.rating;
-  cook.goals = req.body.goals;
 
   res.status(200).send(cook);
 });
@@ -175,7 +166,6 @@ const validateCook = (cook) => {
     hometown: Joi.string().required(),
     favorite_recipe: Joi.string().required(),
     rating: Joi.number().required(),
-    goals: Joi.array().items(Joi.string()).required(),
   });
 
   return schema.validate(cook);
