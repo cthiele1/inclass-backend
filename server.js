@@ -21,7 +21,7 @@ const upload = multer({ storage: storage });
 
 const house_plans = [
   {
-    _id: 1,
+    id: 1,
     img_name: "cook1.jpg",
     name: "Ray Young",
     hometown: "Atlanta, GA",
@@ -29,7 +29,7 @@ const house_plans = [
     rating: 4.7,
   },
   {
-    _id: 2,
+    id: 2,
     img_name: "cook2.jpg",
     name: "Earl Rayberry",
     hometown: "Charleston, SC",
@@ -37,7 +37,7 @@ const house_plans = [
     rating: 4.2,
   },
   {
-    _id: 3,
+    id: 3,
     img_name: "cook3.jpg",
     name: "Mark Bulhberg",
     hometown: "Oxford, MS",
@@ -45,7 +45,7 @@ const house_plans = [
     rating: 4.1,
   },
   {
-    _id: 4,
+    id: 4,
     img_name: "cook4.jpg",
     name: "Jermey Goldstein",
     hometown: "Baton Rouge, LA",
@@ -53,7 +53,7 @@ const house_plans = [
     rating: 4.7,
   },
   {
-    _id: 5,
+    id: 5,
     img_name: "cook5.jpg",
     name: "Chris Brownberry",
     hometown: "Columbia, SC",
@@ -61,7 +61,7 @@ const house_plans = [
     rating: 3.9,
   },
   {
-    _id: 6,
+    id: 6,
     img_name: "cook6.jpg",
     name: "Amy Bornwell",
     hometown: "Greenville, SC",
@@ -69,7 +69,7 @@ const house_plans = [
     rating: 4.3,
   },
   {
-    _id: 7,
+    id: 7,
     img_name: "cook7.jpg",
     name: "Jack Dawson",
     hometown: "Raleigh, NC",
@@ -77,7 +77,7 @@ const house_plans = [
     rating: 4.9,
   },
   {
-    _id: 8,
+    id: 8,
     img_name: "cook8.jpg",
     name: "Josh Cornberry",
     hometown: "Auburn, AL",
@@ -129,7 +129,7 @@ app.put("/api/house_plans/:id", (req, res) => {
     return res.status(400).send(result.error.details[0].message);
   }
 
-  const cook = house_plans.find((h) => h._id === parseInt(id));
+  const cook = house_plans.find((h) => h.id === parseInt(id));
   if (!cook) {
     return res.status(404).send("The cook with the given ID was not found.");
   }
@@ -142,11 +142,11 @@ app.put("/api/house_plans/:id", (req, res) => {
 });
 
 app.delete("/api/house_plans/:id", (req, res) => {
-  //const cook = house_plans.find((h) => h._id === parseInt(req.params.id));
+  //const cook = house_plans.find((h) => h.id === parseInt(req.params.id));
   const { id } = req.params;
   let cook;
   house_plans.forEach((h) => {
-    if (h._id === parseInt(id)) {
+    if (h.id === parseInt(id)) {
       cook = h;
       return;
     }
