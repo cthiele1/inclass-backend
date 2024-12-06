@@ -124,21 +124,8 @@ app.put("/api/house_plans/:id", upload.single("img"), async (req, res) => {
   }
 });
 
-app.delete("/api/house_plans/:id", (req, res) => {
-  //const cook = house_plans.find((h) => h.id === parseInt(req.params.id));
-  const { id } = req.params;
-  let cook;
-  house_plans.forEach((h) => {
-    if (h.id === parseInt(id)) {
-      cook = h;
-      return;
-    }
-  });
-  if (!cook) {
-    res.status(404).send("The cook given id was not found");
-  }
-  const index = house_plans.indexOf(cook);
-  house_plans.splice(index, 1);
+app.delete("/api/house_plans/:id", async (req, res) => {
+  const cook = await Cook.findByIdAndDelete(req.params.id);
   res.status(200).send(cook);
 });
 
